@@ -52,7 +52,7 @@ python third_party/taccap-gripper/python/examples/calibrate.py right
 左右由固件烧录的 SN 判定,和采集时 `left_gripper.pos` 用的是同一条规则,所以
 `calibrate.py left` 标的一定就是 `left` 那一台。脚本会把解析出的
 固件 SN 连同**扫到的全部夹爪**一起打印,方便在写 flash 之前确认没选错。想显式锁定某台时,
-仍可直接传固件 SN(`calibrate.py TCGU01A28Z0024m`)。
+仍可直接传固件 SN(`calibrate.py TCGU01A28Z0024m`,SN 为示例,换成你自己那台的)。
 
 !!! danger "报 `needs command set >= V2.1` → 先刷固件,再回来标定"
     脚本先验固件版本,不够就**原样退出、什么都不改**,并打印当前版本和该跑的命令:

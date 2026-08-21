@@ -57,7 +57,8 @@ Side is read from the firmware-burned SN, the same rule collection applies to
 `left_gripper.pos` — so `calibrate.py left` is guaranteed to be the gripper `left` means
 everywhere else. The script prints the firmware SN it resolved along with
 **every gripper the scan saw**, so a wrong pick is visible before anything reaches flash. To pin a
-unit explicitly, pass its firmware SN instead (`calibrate.py TCGU01A28Z0024m`).
+unit explicitly, pass its firmware SN instead (`calibrate.py TCGU01A28Z0024m` — that SN is an
+example; use your own).
 
 !!! danger "`needs command set >= V2.1` → flash first, then come back and calibrate"
     The script checks the firmware version **before** touching anything. If it is too old it
