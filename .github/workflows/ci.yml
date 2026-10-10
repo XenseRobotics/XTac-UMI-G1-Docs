@@ -1,0 +1,46 @@
+name: CI
+
+# PR 构建检查:只构建,不发布。
+# deploy.yml 只在 push 时跑,PR 上没有任何检查,断链要等合进 main
+# 才会在发布时炸出来 —— 那时构建失败,rsync 不执行,生产站会悄悄停在旧版本。
+# 这里把 `mkdocs build --strict` 提到合并之前。
+#
+# 刻意不加 paths 过滤:这个 job 之后要设成 main 的必需检查,
+# 而被 paths 过滤跳过的 workflow 不会上报状态,PR 会永远卡在等待中。
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+
+# 只构建不发布,读权限就够(deploy.yml 要写 gh-pages 才需要 write)。
+permissions:
+  contents: read
+
+# 同一个 PR 连着推几次时,取消上一次没跑完的构建。
+# 这里不往任何地方写东西,取消是安全的。
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: 安装依赖
+        run: pip install -r requirements.txt
+
+      # 和 deploy.yml 用同一条命令:断链、指向不存在的锚点、
+      # 导航外的页面都会让它失败。
+      - name: 严格构建
+        run: mkdocs build --strict
+        env:
+          DISABLE_MKDOCS_2_WARNING: "true"
